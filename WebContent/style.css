@@ -1,0 +1,22 @@
+@CHARSET "utf-8";
+input radio {
+	font-size: initial;
+}
+
+#fo {
+	width: 70%;
+}
+
+#div_relat {
+	position: fixed;
+	top: 100px;
+	right: 20px;
+	height: 100%;
+}
+
+#relat_geren {
+	width: 100%;
+	height: 500px;
+	resize: none;
+	overflow-y: scroll;
+}
