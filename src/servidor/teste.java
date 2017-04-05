@@ -189,6 +189,7 @@ public class teste{
 					}
 				
 				if(linha != true) MetodoFase2(matriz);
+
 				//Preenche o vetor com a menor variavel para verificacao de menor quociente
 				VetorQuociente = new float[Simplex.quantEquacoes+1];
 				for(int i = 0; i < VetorQuociente.length; i++){
@@ -264,7 +265,7 @@ public class teste{
 				matrizTransformada[posicaoQuociente+1][MinColuna] = (matrizTransformada[posicaoQuociente+1][MinColuna])*(-1);
 				//Verifica posicao negativa
 				for(int linha1 = 1; linha1 < Simplex.quantEquacoes+1; linha1++ ){								
-						if(matriz[linha1][0] < 0){
+						if(matrizTransformada[linha1][0] < 0){
 								Testelinha = true;
 						}		
 					}
