@@ -79,6 +79,8 @@
 				$("#btn_restr").click(function() {
 					var restricoes = parseInt($("#num_restr").val(), 10);
 					$("#max").empty();
+					
+					// cria os inputs
 					if($.isNumeric(restricoes)) {
 						var html = "";
 						for (var i = 1; i <= restricoes; i++) {
