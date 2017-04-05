@@ -13,8 +13,8 @@ public class Formulario {
 	
 	private int qtdeDesenhos;
 	private int qtdeEtapas;
-	private float[] minPorEtapa;
-	private float[][] minPorDesPorEtapa;
+	private int[] minPorEtapa;
+	private int[][] minPorDesPorEtapa;
 	
 	/**
 	 * Construtor - instancia um objeto já com todos os valores alocados
@@ -23,8 +23,8 @@ public class Formulario {
 	public Formulario(Map<String, String[]> map) {
 		qtdeDesenhos = Integer.parseInt(map.get("var_dec")[0]); // contem o numero digitado no input de tipos de desenhos	
 		qtdeEtapas = Integer.parseInt(map.get("num_restr")[0]); // contem o numero digitado no input de quantidade de etapas
-		minPorEtapa = new float[qtdeEtapas+1];
-		minPorDesPorEtapa = new float[qtdeDesenhos+1][qtdeEtapas+1];
+		minPorEtapa = new int[qtdeEtapas+1];
+		minPorDesPorEtapa = new int[qtdeDesenhos+1][qtdeEtapas+1];
 		/* percorre os inputs referentes aos minutos de cada etapa e aos minutos para
 		cada etapa para cada desenho 
 		OBS: os valores sao retornados como vetores de strings. Neste caso, basta acessar
@@ -41,11 +41,11 @@ public class Formulario {
 					int i = Integer.parseInt(ss[2]),
 						j = Integer.parseInt(ss[4]);
 					
-					minPorDesPorEtapa[i][j] = Float.parseFloat(par.getValue()[0]);
+					minPorDesPorEtapa[j][i] = Integer.parseInt(par.getValue()[0]);
 				}
 				else {
 					int pos = Integer.parseInt(chave.substring(4));
-					minPorEtapa[pos] = Float.parseFloat(par.getValue()[0]);
+					minPorEtapa[pos] = Integer.parseInt(par.getValue()[0]);
 				}
 			}
 			else continue;
@@ -68,27 +68,27 @@ public class Formulario {
 		this.qtdeEtapas = qtdeEtapas;
 	}
 
-	public float[] getMinPorEtapa() {
+	public int[] getMinPorEtapa() {
 		return minPorEtapa;
 	}
 
-	public void setMinPorEtapa(float[] minPorEtapa) {
+	public void setMinPorEtapa(int[] minPorEtapa) {
 		this.minPorEtapa = minPorEtapa;
 	}
 
-	public float[][] getMinPorDesPorEtapa() {
+	public int[][] getMinPorDesPorEtapa() {
 		return minPorDesPorEtapa;
 	}
 
-	public void setMinPorDesPorEtapa(float[][] minPorDesPorEtapa) {
+	public void setMinPorDesPorEtapa(int[][] minPorDesPorEtapa) {
 		this.minPorDesPorEtapa = minPorDesPorEtapa;
 	}
 	
-	public float getMinPorEtapaX(int i) {
+	public int getMinPorEtapaX(int i) {
 		return minPorEtapa[i];
 	}
 	
-	public float getMinPorDesIPorEtapaJ(int I, int J) {
-		return minPorDesPorEtapa[I][J];
+	public int getMinPorDesIPorEtapaJ(int i, int j) {
+		return minPorDesPorEtapa[i][j];
 	}
 }
