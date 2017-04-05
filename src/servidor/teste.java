@@ -1,7 +1,7 @@
 public class teste{
 	private static float [][] matrizEquacao;
 	private static String [] vetor; 
-
+	private static float [][] matrizTransformada;
 	/*Construtor para pegar o vetor passado como parametro
 	*Salva o vetor passado para ser inserido na matriz
 	*/
@@ -21,7 +21,6 @@ public class teste{
 		boolean teste = false;
 
 		matrizEquacao = new float[Simplex.quantEquacoes+1][Simplex.quantTipoDesenho+1];
-
 
 		for(int linha1 = 0; linha1 < Simplex.quantEquacoes+1; linha1++ ){
 			for(int coluna1 = 0; coluna1 < Simplex.quantTipoDesenho+1; coluna1++){
@@ -146,17 +145,26 @@ public class teste{
 								}				
 							}
 					}
-					//MostrarMatriz(matrizEquacao);
+					MostrarMatriz(matrizEquacao);
 					MetodoFase1(matrizEquacao);
 			}
 
 			private static void MetodoFase1(float [][] matriz){
 				float  MinQuociente = 0;
-				int cont = 0,posicaoQuociente = 0, MinLinha = 0, MinColuna = 0;
-				
+				int cont = 0, posicaoQuociente = 0, MinLinha = 0, MinColuna = 0;
+				boolean	Testelinha = false; boolean Testecoluna = false;
 				boolean linha = false, coluna = false;
 				float []VetorQuociente;
-				
+
+				matrizTransformada = new float[Simplex.quantEquacoes+1][Simplex.quantTipoDesenho+1]; 	
+			do{
+				for(int linha1 = 0; linha1 < Simplex.quantEquacoes+1; linha1++ ){
+					for(int coluna1 = 0; coluna1 < Simplex.quantTipoDesenho+1; coluna1++){
+						matrizTransformada[linha1][coluna1] = Float.MIN_VALUE;
+				}
+			}
+		
+				//Verfica se existe valores negativos
 				//Pesquisa a linha e coluna permissivel
 				for(int linha1 = 1; linha1 < Simplex.quantEquacoes+1; linha1++ ){								
 						if(matriz[linha1][0] < 0){
@@ -165,15 +173,14 @@ public class teste{
 									for(int coluna1 = 1; coluna1 < Simplex.quantTipoDesenho+1; coluna1++){
 										if(matriz[linha1][coluna1] < 0){
 												MinColuna = coluna1;
-
 												coluna = true;	
 												coluna1 = Simplex.quantTipoDesenho+1;		
 											}	
-								}
+									}
 						}		
 					}
 				
-				if(linha != true) MetodoFase2();
+				if(linha != true) MetodoFase2(matriz);
 				//Preenche o vetor com a menor variavel para verificacao de menor quociente
 				VetorQuociente = new float[Simplex.quantEquacoes+1];
 				for(int i = 0; i < VetorQuociente.length; i++){
@@ -197,21 +204,76 @@ public class teste{
 							posicaoQuociente = QQ;
 						}								
 				}
-							
-			//Fazer as contas necessarias e passar para a matriz
+			//Pega o valor do menor quociente e o inverte 
+			if(posicaoQuociente+1 != Simplex.quantEquacoes+1){
+			matrizTransformada[posicaoQuociente+1][MinColuna] = 1/matriz[posicaoQuociente+1][MinColuna];
+			}	else{ 
+			matrizTransformada[posicaoQuociente][MinColuna] = 1/matriz[posicaoQuociente][MinColuna];
+				}
+			
+			//Multiplicacao da linha pelo valor inverso
+			for(int j = 0; j < Simplex.quantTipoDesenho+1; j++ ){
+				if(j != MinColuna){
+					matrizTransformada[posicaoQuociente+1][j] = matrizTransformada[posicaoQuociente+1][MinColuna]*matriz[posicaoQuociente+1][j];
+				}
+			}
+			//Multiplicacao da coluna pelo valor inverso negativo
+			matrizTransformada[posicaoQuociente+1][MinColuna] = (matrizTransformada[posicaoQuociente+1][MinColuna])*(-1);
+			for(int i = 0; i < Simplex.quantEquacoes+1; i++){
+				if(i != posicaoQuociente+1){
+					matrizTransformada[i][MinColuna] = matrizTransformada[posicaoQuociente+1][MinColuna]*matriz[i][MinColuna];
+				}
+			}	
+			//Preenchimento do resto da matriz
+				int PercorreLinha = 0, i = 0, j = 0;
+				while(i < Simplex.quantTipoDesenho+1 ){
+					if(PercorreLinha != MinColuna){
+						while(j < Simplex.quantEquacoes+1){
+							if(matrizTransformada[j][i] == Float.MIN_VALUE){	
+								if(j != posicaoQuociente+1 && i != MinColuna){
+									matrizTransformada[j][i] = matriz[posicaoQuociente+1][PercorreLinha]* matrizTransformada[j][MinColuna]; 
+									j++;
+								}
+							}else {j++;}								
+						}
+					}
+					i++;
+					j=0;
+					PercorreLinha++;
+				}
 				
+				//Onde tiver -0 a variavel é trocada para 0
+				for(int linha1 = 0; linha1 < Simplex.quantEquacoes+1; linha1++ ){
+					for(int coluna1 = 0; coluna1 < Simplex.quantTipoDesenho+1; coluna1++){
+						if(matrizTransformada[linha1][coluna1] == -0) matrizTransformada[linha1][coluna1] = 0;
+				}
+			}
+		
+				//Verifica posicao negativa
+				for(int linha1 = 1; linha1 < Simplex.quantEquacoes+1; linha1++ ){								
+						if(matriz[linha1][0] < 0){
+								Testelinha = true;
+						}		
+					}
+					matriz = matrizTransformada;
+		}while(Testelinha == false);
 
-		}//FimMetodoFase1		
+
+			MostrarMatriz(matrizTransformada);
+			MetodoFase2(matrizEquacao);									
+	}//FimMetodoFase1		
 
 			
 
-			public static void MetodoFase2(){}
+			public static void MetodoFase2(float m [][]){
+			System.out.println("Entrei aqui!");			
+			}
 
 			//Mostrar minha matriz
 			private static void MostrarMatriz(float [][] m){
 				for(int linha1 = 0; linha1 < Simplex.quantEquacoes+1; linha1++ ){
 					for(int coluna1 = 0; coluna1 < Simplex.quantTipoDesenho+1; coluna1++){
-						System.out.print(matrizEquacao[linha1][coluna1] +"\t");						
+						System.out.print(m[linha1][coluna1] +"\t");						
 					}
 						System.out.println();
 				}
