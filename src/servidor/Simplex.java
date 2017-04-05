@@ -1,48 +1,70 @@
+package servidor;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Simplex {
-	static int MINorMAX = 0;
+	static int MINorMAX = 1;
 	public static int quantEquacoes = 0;
 	static int contA = 0,contB = 0; 
 	public static int quantTipoDesenho = 0; 
-
-		public void simplex(){}
+	public static Formulario form;
+	
+		public void simplex(){
+			
+		}
 		
 		public static void PegarEquacao(){
 		int cont = 1;
 		String []vetorEquacao;
-		String EquacaoMM;
+		String EquacaoMM = "";
 	
-		BufferedReader leitor = new BufferedReader(new InputStreamReader(System.in));  
+		//BufferedReader leitor = new BufferedReader(new InputStreamReader(System.in));  
 			try{
-				System.out.println("Se deseja maximizar uma equacao digite 1.");
-				System.out.println("Se deseja minimizar uma equacao digite 2.");
+				//System.out.println("Se deseja maximizar uma equacao digite 1.");
+				//System.out.println("Se deseja minimizar uma equacao digite 2.");
 				
-				MINorMAX = Integer.parseInt(leitor.readLine());
+				//MINorMAX = Integer.parseInt(leitor.readLine());
 	
-				System.out.println("Quantas equacoes?");
-				quantEquacoes = Integer.parseInt(leitor.readLine());
+				//System.out.println("Quantas equacoes?");
+				//quantEquacoes = Integer.parseInt(leitor.readLine());
+				quantEquacoes = form.getQtdeEtapas();
 				vetorEquacao = new String [(quantEquacoes+1)];
 
-				System.out.println("Quantos tipos de desenho?");
-				quantTipoDesenho = Integer.parseInt(leitor.readLine());
+				//System.out.println("Quantos tipos de desenho?");
+				//quantTipoDesenho = Integer.parseInt(leitor.readLine());
+				quantTipoDesenho = form.getQtdeDesenhos();
 				
-				System.out.println("Escreva a equacao que sera minimizada ou maximizada:");
-				EquacaoMM = leitor.readLine();			
-				EquacaoMM = EquacaoMM.toLowerCase().trim();
-				EquacaoMM = EquacaoMM.replace(" ","");
-
+				//System.out.println("Escreva a equacao que sera minimizada ou maximizada:");
+				//EquacaoMM = leitor.readLine();			
+				//EquacaoMM = EquacaoMM.toLowerCase().trim();
+				//EquacaoMM = EquacaoMM.replace(" ","");
+				int contX = 1;
+				/*for(; contX<quantTipoDesenho; contX++) {
+					EquacaoMM += "1x" + contX + "+";
+				}*/
+				EquacaoMM = "80x1+60x2";
+				//EquacaoMM += "1x" + contX;
 				vetorEquacao[0] =  EquacaoMM;
+				/*vetorEquacao[1] = "4x1+6x2>=24";
+				vetorEquacao[2] = "4x1+2x2<=16";
+				vetorEquacao[3] = "x2<=3";*/
+				
 								
 				while(cont <= quantEquacoes){
-					System.out.println("Digite as equacoes:");
-					EquacaoMM = leitor.readLine();
-					EquacaoMM = EquacaoMM.toLowerCase().trim();
-					vetorEquacao[cont] = EquacaoMM;		
+					//System.out.println("Digite as equacoes:");
+					//EquacaoMM = leitor.readLine();
+					//EquacaoMM = EquacaoMM.toLowerCase().trim();
+					EquacaoMM = "";					
+					for(contX=1; contX<quantTipoDesenho; contX++) {
+						EquacaoMM += form.getMinPorDesIPorEtapaJ(contX, cont) + "x" + contX + "+";
+					}
+					EquacaoMM += form.getMinPorDesIPorEtapaJ(contX, cont) + "x" + quantTipoDesenho;
+					EquacaoMM += "<=" + form.getMinPorEtapaX(cont);
+					vetorEquacao[cont] = EquacaoMM;
 					cont++;
 				}	
-	
+				
 				TratarEquacoes(vetorEquacao);												
 				
 			} catch (Exception excecao) {
@@ -61,10 +83,11 @@ public class Simplex {
 				if(MINorMAX == 1 || MINorMAX == 2){
 					MIN = TratarString[0];
 					if(MIN.charAt(0) >= 'a' && MIN.charAt(0) <= 'z'){
-						MIN = "+".concat( MIN);
+						MIN = "+".concat( MIN);						
 					} else if(MIN.charAt(0) >= '0' && MIN.charAt(0) <= '9'){
-					MIN = "+".concat(MIN);
-						}			
+						MIN = "+".concat(MIN);
+						System.out.println("min: " + MIN);
+					}			
 				} else {
 					System.out.println("Valor de Min e MAX errado!");			
 				   }
