@@ -19,10 +19,18 @@
 				<div class="col-xs-12">
 					<br/>
 					<div>
-						<p><b>Este é um Otimizador de Desenhos. Com ele, você poderá descobrir a quantidade máxima de desenhos que você pode fazer, de acordo com os tipos de desenho (ou categorias, se preferir) e a quantidade de horas que você irá dedicar a esta prática (e para cada etapa do desenho, quando for o caso). Basta entrar com os dados abaixo e o sistema dirá quantos desenhos você poderá fazer de acordo com as suas restrições.</b></p>
+						<p><b>Este é um Otimizador de Desenhos. Com ele, você poderá
+						descobrir a quantidade máxima de desenhos que você pode fazer,
+						de acordo com os tipos de desenho (ou categorias, se preferir)
+						e a quantidade de horas que você irá dedicar a esta prática
+						(e para cada etapa do desenho, quando for o caso). Basta entrar
+						com os dados abaixo e o sistema dirá quantos desenhos você poderá
+						fazer de acordo com as suas restrições.</b></p>
+						
+						<p>OBS: todas os campos devem ser obrigatoriamente preenchidos
+						e os valores devem ser positivos para o cálculo funcioar </p>
 					</div>
-					<form action="<%request.getContextPath();%>Response" method="post">
-					<%System.out.print(request.getContextPath()); %>
+					<form action="<%request.getContextPath();%>Response" method="post" target="_blank">
 						<!-- <br/>
 						<div class="row" style="padding-left: 30px">
 							<label class="radio=online">
