@@ -14,8 +14,9 @@ public class Simplex {
 			
 		}
 		
-		public static void PegarEquacao(){
-		int cont = 1;
+		public static float[][] PegarEquacao(){
+			System.out.println("0");
+			int cont = 1;
 		String []vetorEquacao;
 		String EquacaoMM = "";
 	
@@ -65,15 +66,17 @@ public class Simplex {
 					cont++;
 				}	
 				
-				TratarEquacoes(vetorEquacao);												
+				return TratarEquacoes(vetorEquacao);
 				
 			} catch (Exception excecao) {
 		         System.out.println("Excecao: ");
 							excecao.printStackTrace();
 				}
+			return null;
 	}
 
-		public static void TratarEquacoes(String TratarString[]){
+		public static float[][] TratarEquacoes(String TratarString[]){
+			System.out.println("1");
 			String MIN = " ";	
 			String aux = " ";
 			String NovoValor = " ";
@@ -142,10 +145,11 @@ public class Simplex {
 				}
 				TratarString[i] = MIN;				
 			}	
-				ManipulacaoString(TratarString);		 
+				return ManipulacaoString(TratarString);	 
 		}//fim TratarEquacoes
 
-		public static void ManipulacaoString (String ManipularString[]){
+		public static float[][] ManipulacaoString (String ManipularString[]){
+			System.out.println("2");
 			String MIN = "";	
 			String aux = "";
 			String aux1 = ""; 			
@@ -195,11 +199,12 @@ public class Simplex {
 					teste = true;
 					ManipularString[i] = MIN;
 				}
-				StringFinal(ManipularString);
+				return StringFinal(ManipularString);
 		}//fim ManipulacaoString 
 		
 			//Metodo criado para transformar a minha equacao 
-			public static void StringFinal(String [] stringFinal){
+			public static float[][] StringFinal(String [] stringFinal){
+				System.out.println("3");
 				String MIN = "", aux = "", aux1 = "", ParteString = "";
 				boolean teste = true; 
 				int num = 4;
@@ -266,12 +271,13 @@ public class Simplex {
 					aux1 = "";
 				}//fim for
 
-		MostrarVetor(stringFinal);		
+		//MostrarVetor(stringFinal);		
 		teste simplex = new teste(stringFinal);
- 		simplex.CriarMatriz( ); 
+ 		return simplex.CriarMatriz( ); 
 	}//fim StringFinal
 
 	public static String InserirValorEquacaoA(){
+		System.out.println("a");
 			String NovoValor = " ";			
 			NovoValor = "a".concat(""+contA);
 			contA++;		
@@ -279,6 +285,7 @@ public class Simplex {
 	}
 
 	public static String InserirValorEquacaoB(){
+		System.out.println("b");
 			String NovoValor = " ";			
 			NovoValor = "b".concat(""+contB);
 			contB++;		
@@ -289,12 +296,6 @@ public class Simplex {
 		for(int i = 0; i < EquacaoVetor.length; i++){
 			System.out.println("Equacao:" +EquacaoVetor[i]);					
 		}		
-	}
-		
-	public static void main (String args[]){
-		PegarEquacao();
-		
-		
 	}
 }
 	

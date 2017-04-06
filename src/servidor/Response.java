@@ -69,7 +69,7 @@ public class Response extends HttpServlet {
 		Map<String,String[]> m = request.getParameterMap();
 		Formulario form = new Formulario(m);
 		Simplex.form = form;
-		Simplex.PegarEquacao();
+		float[][] resposta = Simplex.PegarEquacao();
 		PrintWriter out = response.getWriter();
 		out.println(
 			  "<!DOCTYPE html>\n"
@@ -82,11 +82,28 @@ public class Response extends HttpServlet {
 			+ 	"</head>"
 			+ 	"<body>"
 			+ 		"<center>"
-			+ 			"<div class='col-xs-12'><img src='titulo.png' class='img-responsive' /></div>"
-			+ 		"</center>"				
-			+ 	"</body>"					  
-			+ "</html>"
-		);
+			+ 			"<div class='col-xs-12'> <img src='titulo.png' class='img-responsive' /></div>"
+			+ 			"<table>");
+			for(int i=0; i<resposta.length; i++) {
+				out.print("<tr style='padding:10px'>");
+				for(int j=0; j<resposta[i].length; j++) {
+					out.print("<td style='padding:10px'>" + resposta[i][j] + "</td>");
+				}
+				out.print("</tr>");
+			}
+		
+			out.println("</table></center></body></html>");
+	}
+	
+	public String matrizToString(float[][] m) {
+		String s = "";
+		for(int i=0; i<m.length; i++) {
+			for(int j=0; j<m[i].length; j++) {
+				s += m[i][j] + " "; 
+			}
+			s += "\n";
+		}
+		return s;
 	}
 
 }
