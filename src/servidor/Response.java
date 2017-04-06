@@ -70,6 +70,23 @@ public class Response extends HttpServlet {
 		Formulario form = new Formulario(m);
 		Simplex.form = form;
 		Simplex.PegarEquacao();
+		PrintWriter out = response.getWriter();
+		out.println(
+			  "<!DOCTYPE html>\n"
+			+ "<html>"
+			+ 	"<head>"
+			+ 		"<title>Otimizador de desenhos</title>"
+			+ 		"<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />"
+			+ 		"<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' />"
+			+ 		"<link rel='stylesheet' href='style.css' />"
+			+ 	"</head>"
+			+ 	"<body>"
+			+ 		"<center>"
+			+ 			"<div class='col-xs-12'><img src='titulo.png' class='img-responsive' /></div>"
+			+ 		"</center>"				
+			+ 	"</body>"					  
+			+ "</html>"
+		);
 	}
 
 }
