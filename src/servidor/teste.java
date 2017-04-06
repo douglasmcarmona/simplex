@@ -192,7 +192,7 @@ public class teste{
 									}
 						}		
 					}
-				
+				TrocaVariaveis(MinLinha,MinColuna);
 				if(linha != true)MetodoFase2(matriz);
 				else{
 				//Preenche o vetor com a menor variavel para verificacao de menor quociente
@@ -307,9 +307,61 @@ public class teste{
 										if (resSIli) resposta = ("Solucao Ilimitada");
 									else m = Teste(m);
 				}while(resSO == false && resSI == false && resSM == false && resSIli == false);	
+			RespostaDesenho(m);	
 			//MostrarMatriz(m);
 			}//fim metodo2
 			
+			public static void RespostaDesenho (float m[][]){	
+					String aux = "";	
+					for (int j = 1; j < Simplex.quantEquacoes+1; j++){
+							aux = vetorLinha[j]; 
+								for(int i = 0; i < aux.length(); i++){				
+									if(aux.charAt(i) == 'x'){
+										System.out.println("Quantidade de desenho do tipo "+vetorLinha[j]+" e: " +m[j][0]);	
+										//System.out.println("j: " +j); 	
+								}					
+							}															
+					}
+				}
+
+			public static void TrocaVariaveis(int trocaLinha, int trocaColuna){
+				vetorLinha = new String [Simplex.quantEquacoes+1];
+				vetorColuna = new String [Simplex.quantTipoDesenho+1];
+				String MIN = "", aux = "", aux1 = "";
+				int contLinha = 1, contColuna = 1;				
+			
+				vetorLinha[0] = "0";
+				vetorColuna[0] = "0";  		
+	
+					//Preenche os meus vetores com as respectivas variaveis
+					for(int i = 0;i < Simplex.quantEquacoes+1; i++){
+						MIN = vetor[i];			
+						for(int j = 0; j< MIN.length(); j++){
+								if(MIN.charAt(j) == 'x')
+								{
+									aux1 = ""+MIN.charAt(j); 
+									aux = aux1.concat(""+MIN.charAt(j+1));
+									vetorColuna[contColuna] = aux;
+									contColuna++;
+								} else{
+										if(MIN.charAt(j) == 'a' || MIN.charAt(j) == 'b'){
+												aux1 = ""+MIN.charAt(j); 
+												aux = aux1.concat(""+MIN.charAt(j+1));
+												vetorLinha[contLinha] = aux;
+												contLinha++;
+												j = MIN.length();
+											}
+				
+									}			
+						}			
+			}		
+				//Troca as minhas variaveis
+						aux = vetorColuna[trocaColuna];
+						aux1 = vetorLinha[trocaLinha];
+		
+						vetorColuna[trocaColuna] = aux1;	
+						vetorLinha[trocaLinha] = aux;
+			}
 			
 			public static boolean SolucaoIlimitada(float matriz [][]) {
 				boolean SIli = false;
@@ -413,7 +465,7 @@ public class teste{
 							}		
 						}
 					}		
-
+			TrocaVariaveis(MinLinha,MinColuna);
 			//Preenche o vetor com a menor variavel para verificacao de menor quociente
 				VetorQuociente1 = new float[Simplex.quantEquacoes+1];
 				for(int i = 0; i < VetorQuociente1.length; i++){
