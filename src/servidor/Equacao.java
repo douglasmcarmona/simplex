@@ -63,7 +63,7 @@ public class Equacao {
 				if(MINorMAX == 1 || MINorMAX == 2){
 					MIN = vetorEquacao[0];
 					if(MIN.charAt(0) >= 'a' && MIN.charAt(0) <= 'z'){
-						MIN = "+".concat( MIN);
+						MIN = "+".concat(MIN);
 					} else if(MIN.charAt(0) >= '0' && MIN.charAt(0) <= '9'){
 					MIN = "+".concat(MIN);
 						}			
@@ -72,18 +72,21 @@ public class Equacao {
 				   }
 			
 			//Transformacao de MAX para MIN
-			if(MIN.charAt(0) == '-')MIN = "+".concat(MIN.substring(1, MIN.length())); 		
-				else if(MIN.charAt(0) == '+') MIN = "-".concat(MIN.substring(1, MIN.length()));
+			if(MINorMAX == 1){
+				if(MIN.charAt(0) == '-')MIN = "+".concat(MIN.substring(1, MIN.length())); 		
+					else if(MIN.charAt(0) == '+') MIN = "-".concat(MIN.substring(1, MIN.length()));
 			
-			for(int i = 1; i < MIN.length();i++){
-				if(MIN.charAt(i) == '-' ){					
-					MIN = MIN.substring(0,(i-1)) + "+".concat(MIN.substring(i+2, MIN.length()));
-				}else if(MIN.charAt(i) == '+'){					
-					aux = MIN.substring(0,(i)).concat("-");					
-					MIN = aux.concat(MIN.substring(i+1, MIN.length()));						
-				  }	
+				for(int i = 1; i < MIN.length();i++){
+					if(MIN.charAt(i) == '-' ){					
+						MIN = MIN.substring(0,(i-1)) + "+".concat(MIN.substring(i+2, MIN.length()));
+					}else if(MIN.charAt(i) == '+'){					
+						aux = MIN.substring(0,(i)).concat("-");					
+						MIN = aux.concat(MIN.substring(i+1, MIN.length()));						
+					  }	
+					}
 			}
-			vetorEquacao[0]	 = MIN;	
+			
+			vetorEquacao[0]	= MIN;	
 	
 			//Transformacao das equacoes para insercao da variavel livre
 			for(int i = 1; i<vetorEquacao.length; i++){
@@ -185,7 +188,6 @@ public class Equacao {
 				int num = 4;
 
 				MIN = vetorEquacao[0]; 
-								
 				//Tranformacao da esquacao maximizada e minimizada
 					aux = "+0-(";
 					for(int i = 0; i < MIN.length(); i++){
@@ -193,15 +195,14 @@ public class Equacao {
 								aux1 = aux.concat("-");
 								if(i == 0){
 										aux = aux1.concat(ParteString);
-								}else{	
-										aux = aux1.concat(""+MIN.charAt(i));
-										aux1 = aux;
-									}			
+								}	
 							}else{
 								if(MIN.charAt(i) == '-'){
 										aux1 = aux.concat("+");
-										if(i == 0){ aux = aux1.concat(ParteString);}
-									}else{
+											if(i == 0){ 
+												aux = aux1.concat(ParteString);
+											}
+										}else{//Concatenar numeros
  											aux = aux1.concat(""+MIN.charAt(i));
 											aux1 = aux;
 										}//fim else																						
@@ -222,7 +223,6 @@ public class Equacao {
 							if(MIN.charAt(j) >= '0' && MIN.charAt(j) <= '9')cont++;
 							else j = MIN.length();
 							}
-
 						aux = MIN.substring(0,(5+cont));
 //System.out.println("auz4: " +aux1);
 						aux = aux.concat("-(");
