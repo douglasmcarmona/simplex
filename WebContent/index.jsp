@@ -126,13 +126,14 @@
 						$(html).hide().appendTo("#min_por_etp").fadeIn("slow");
 					}
 				});
-				$("#btn_otimo").click(function() {
+				$("form").submit(function() {
 					var caminho = window.location.pathname;
-					$.post(caminho.substring(0, caminho.lastIndexOf('/')) + "/response.jsp"), 
+					//alert($("form").serialize());
+					$.post(caminho.substring(0, caminho.lastIndexOf('/')) + "/Response"),
 					$("form").serialize(),
 					function(resposta) {
 						alert(resposta);
-					}
+					}					
 				});
 			});
 		</script>
