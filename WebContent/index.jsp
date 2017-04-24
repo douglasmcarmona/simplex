@@ -28,9 +28,10 @@
 						fazer de acordo com as suas restrições.</b></p>
 						
 						<p>OBS: todas os campos devem ser obrigatoriamente preenchidos
-						e os valores devem ser positivos para o cálculo funcioar </p>
+						e os valores devem ser positivos e inteiros para o cálculo funcioar </p>
 					</div>
-					<form action="<%request.getContextPath();%>Response" method="post" target="_blank">
+					<!-- <form action="<%request.getContextPath();%>Response" method="post" target="_blank"> -->
+					<form method="post">
 						<!-- <br/>
 						<div class="row" style="padding-left: 30px">
 							<label class="radio=online">
@@ -56,7 +57,7 @@
 								<input type="button" name="btn_restr" value="Restrições" id="btn_restr" />
 							</div>
 							<div class="col-xs-3 col-md-1" style="display: inline-block;">
-								<input type="submit" name="btn_otimo" value="Otimizar!" id="btn_otimo" />
+								<input type="button" name="btn_otimo" value="Otimizar!" id="btn_otimo" />
 							</div>
 						</div>
 						<br/>
@@ -123,6 +124,14 @@
 						}
 						$("#etp_por_des").fadeIn();
 						$(html).hide().appendTo("#min_por_etp").fadeIn("slow");
+					}
+				});
+				$("#btn_otimo").click(function() {
+					var caminho = window.location.pathname;
+					$.post(caminho.substring(0, caminho.lastIndexOf('/')) + "/response.jsp"), 
+					$("form").serialize(),
+					function(resposta) {
+						alert(resposta);
 					}
 				});
 			});
