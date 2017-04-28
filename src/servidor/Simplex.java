@@ -1,8 +1,9 @@
 public class Simplex{
 	private static float [][] matrizPrincipal;
-	private static String [] vetor; 
+	private static String [] vetorEquacao; 
 	public static String resposta;
-	
+	private static String [] vetorLinha;
+	private static String [] vetorColuna;
 	/*
 	*Preenche a minha matrizEquacao com os valores que estao nas minhas equacoes
 	*/
@@ -25,7 +26,7 @@ public class Simplex{
 			}
 
 		//insere valores da equacao de otimizacao na matriz
-		s = vetor[0];
+		s = vetorEquacao[0];
 		for(int j = 1; j < s.length();j++){
 					if(s.charAt(j-1) != 'x'){	
 							if(s.charAt(j) >= '0' && s.charAt(j) <= '9'){ 
@@ -65,7 +66,8 @@ public class Simplex{
 															matrizAux[linha][coluna] = convert;
 															aux = "";
 															coluna++;																
-															contNum = 0;															}
+															contNum = 0;															
+															}
 														}												
 												}						
 											}	
@@ -74,8 +76,8 @@ public class Simplex{
 				}
 
 	//Insere os valores que estao nas inequacoes na matriz
-		for(int i = 1; i < vetor.length; i++){
-				s = vetor[i];	
+		for(int i = 1; i < vetorEquacao.length; i++){
+				s = vetorEquacao[i];	
 				coluna = 0;
 				linha++;
 				for(int j = 4 ; j < s.length();j++){
@@ -153,7 +155,8 @@ public class Simplex{
 					}
 
 					matrizPrincipal = ClonarMatriz(matrizAux);
-					MostrarMatriz(matrizPrincipal);									
+					PreencheVetorTrocaVariavel();
+					//MostrarMatriz(matrizPrincipal);									
 					//MetodoFase1(matrizEquacao);
 			}
 
@@ -194,7 +197,7 @@ public class Simplex{
 									}
 						}		
 					}
-				
+				TrocaVariaveis(MinLinha,MinColuna);
 				if(linha != true)MetodoFase2();
 				else{
 				//Preenche o vetor com a menor variavel para verificacao de menor quociente
@@ -279,7 +282,7 @@ public class Simplex{
 						}	
 					}	
 					matrizPrincipal = ClonarMatriz(matrizAux);
-					MostrarMatriz(matrizPrincipal);
+					//MostrarMatriz(matrizPrincipal);
 			}
 		}while(Testelinha == true);
 
@@ -310,7 +313,7 @@ public class Simplex{
 										if (resSIli) System.out.println("Solucao Ilimitada");
 									else matrizPrincipal = Teste(matrizPrincipal);
 				}while(resSO == false && resSI == false && resSM == false && resSIli == false);	
-			MostrarMatriz(matrizPrincipal);
+			//MostrarMatriz(matrizPrincipal);
 			}//fim metodo2
 
 			//Verifica se a matriz passada e solucao ilimitada
@@ -412,7 +415,7 @@ public class Simplex{
 							}		
 						}
 					}		
-
+				TrocaVariaveis(MinLinha,MinColuna);
 			//Preenche o vetor com a menor variavel para verificacao de menor quociente
 				VetorQuociente1 = new float[Equacao.quantEquacoes+1];
 				for(int i = 0; i < VetorQuociente1.length; i++){
@@ -494,6 +497,50 @@ public class Simplex{
 				return matrizTransformada1;
 		}
 
+			public static void TrocaVariaveis(int trocaLinha, int trocaColuna){
+				//System.out.println("Linha: " +trocaLinha+" Coluna: "+trocaColuna);	
+				String aux = "", aux1 = "";		
+				//Troca as minhas variaveis
+						aux = vetorColuna[trocaColuna];
+						aux1 = vetorLinha[trocaLinha];
+		
+						vetorColuna[trocaColuna] = aux1;	
+						vetorLinha[trocaLinha] = aux;
+			}	
+
+
+		public static void PreencheVetorTrocaVariavel(){
+				vetorLinha = new String [Equacao.quantEquacoes+1];
+				vetorColuna = new String [Equacao.quantTipoDesenho+1];
+				String MIN = "", aux = "", aux1 = "";
+				int contLinha = 1, contColuna = 1;				
+			
+				vetorLinha[0] = "0";
+				vetorColuna[0] = "0";  		
+	
+					//Preenche os meus vetores com as respectivas variaveis
+					for(int i = 0;i < Equacao.quantEquacoes+1; i++){
+						MIN = vetorEquacao[i];			
+						for(int j = 0; j< MIN.length(); j++){
+								if(MIN.charAt(j) == 'x')
+								{
+									aux1 = ""+MIN.charAt(j); 
+									aux = aux1.concat(""+MIN.charAt(j+1));
+									vetorColuna[contColuna] = aux;
+									contColuna++;
+								} else{
+										if(MIN.charAt(j) == 'a' || MIN.charAt(j) == 'b'){
+												aux1 = ""+MIN.charAt(j); 
+												aux = aux1.concat(""+MIN.charAt(j+1));
+												vetorLinha[contLinha] = aux;
+												contLinha++;
+												j = MIN.length();
+											}
+				
+									}			
+						}			
+			}		
+		}
 			//Clona a matriz 
 			public static float[][] ClonarMatriz(float Matriz[][]){
 					float m [][] = new float[Equacao.quantEquacoes+1][Equacao.quantTipoDesenho+1]; 
@@ -505,6 +552,25 @@ public class Simplex{
 				return m;
 			}
 		
+			private static void MontarResposta(){
+				String guardaString = "", aux = "";	
+				float valorFinal = matrizPrincipal[0][0];
+				
+				if(valorFinal < 0) valorFinal = valorFinal*(-1);
+				aux = aux.concat(""+valorFinal);
+				resposta = "O valor total de desenhos é:" +aux+"."; 
+				
+					for (int j = 1; j < Equacao.quantEquacoes+1; j++){
+							guardaString = vetorLinha[j]; 
+								for(int i = 0; i < guardaString.length(); i++){			
+									if(guardaString.charAt(i) == 'x'){
+										
+										resposta = resposta.concat("Quantidade de desenho do tipo"+guardaString.charAt(++i)+" é: " +matrizPrincipal[j][0]+". ");										 	
+								}					
+							}															
+					}
+			}
+
 			//Mostrar minha matriz
 			private static void MostrarMatriz(float [][] m){
 				for(int linha1 = 0; linha1 < Equacao.quantEquacoes+1; linha1++ ){
@@ -519,10 +585,14 @@ public class Simplex{
 		private static void executar(){
 			Equacao a = new Equacao();
 			a.executar();	
-			vetor = a.vetorEquacao;
+			vetorEquacao = a.vetorEquacao;
 			CriarMatriz();
 			MetodoFase1();
-			MetodoFase2();			
+			MetodoFase2();		
+			MontarResposta();	
+			System.out.println();
+			System.out.println(resposta);
+			System.out.println();
 		}
 
 		public static void main (String []args){
