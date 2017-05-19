@@ -563,9 +563,9 @@ public class Simplex{
 					for (int j = 1; j < Equacao.quantEquacoes+1; j++){
 							guardaString = vetorLinha[j]; 
 								for(int i = 0; i < guardaString.length(); i++){			
-									if(guardaString.charAt(i) == 'x'){
+									if(guardaString.charAt(i) == 'x'||guardaString.charAt(i) == 'a'||guardaString.charAt(i) == 'b'){
 										
-										resposta = resposta.concat("Quantidade de desenho do tipo"+guardaString.charAt(++i)+" é: " +matrizPrincipal[j][0]+". ");										 	
+										resposta = resposta.concat("Quantidade de desenho do tipo"+j+" é: " +matrizPrincipal[j][0]+". ");										 	
 								}					
 							}															
 					}
