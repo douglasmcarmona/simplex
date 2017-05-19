@@ -21,9 +21,9 @@ public class Simplex{
 		//Inicializa a matriz com 0
 		for(int linha1 = 0; linha1 < Equacao.quantEquacoes+1; linha1++ ){
 			for(int coluna1 = 0; coluna1 < Equacao.quantTipoDesenho+1; coluna1++){
-						matrizAux[linha1][coluna1] = Float.parseFloat(""+0);
-				}
+				matrizAux[linha1][coluna1] = Float.parseFloat(""+0);
 			}
+		}
 
 		//insere valores da equacao de otimizacao na matriz
 		s = vetorEquacao[0];
@@ -35,14 +35,14 @@ public class Simplex{
 							}else{
 								if(contNum == 1){
 										if(s.charAt(j-1) >= '0' && s.charAt(j-1) <= '9'){
-											if(s.charAt(j-(contNum+1)) == '+'){
+											if(s.charAt(j-(contNum+1)) == '+'){//verifico qual é o sinal que representa o numero
 												convert = Float.parseFloat(aux);
 												matrizAux[linha][coluna] = convert;
 												aux = "";
 												coluna++;													
 												contNum = 0;
 												}else{
-													if(s.charAt(j-(contNum+1))	== '-')	{
+													if(s.charAt(j-(contNum+1))== '-'){//verifico qual é o sinal que representa o numero
 														convert = (Float.parseFloat(aux)*-1);
 														matrizAux[linha][coluna] = convert;
 														aux = "";
@@ -52,11 +52,11 @@ public class Simplex{
 													
 												}
 											}
-									}else{									
-											if(s.charAt(j-1) >= '0' && s.charAt(j-1) <= '9' && s.charAt(j-2) != 'x'){
-												if(s.charAt(j-(contNum+1)) == '+'){
+									}else{	//se o numero tiver mais de 1 algarismo								
+											if(s.charAt(j-1) >= '0' && s.charAt(j-1) <= '9' && s.charAt(j-2) != 'x'){//Encontra o numero
+												if(s.charAt(j-(contNum+1)) == '+'){//Verficia o sinal do numero
 													convert = Float.parseFloat(aux);
-													matrizAux[linha][coluna] = convert;
+													matrizAux[linha][coluna] = convert;//insere o numero na matriz
 													aux = "";
 													coluna++;													
 													contNum = 0;
@@ -81,7 +81,7 @@ public class Simplex{
 				coluna = 0;
 				linha++;
 				for(int j = 4 ; j < s.length();j++){
-						if(s.charAt(j-1) != 'x'){	//Verifica se a posicao anterior e diferente de x
+						if(s.charAt(j-1) != 'x'){//Verifica se a posicao anterior e diferente de x
 							if(s.charAt(j) >= '0' && s.charAt(j) <= '9'){ 
 									contNum++;
 									aux = aux.concat(""+s.charAt(j));//concatena cada parte do meu numero ate encontrar algo diferente de um numero	
@@ -89,7 +89,7 @@ public class Simplex{
 									//Verifica o tamanho do numero
 									if(contNum == 1){
 										if(s.charAt(j-1) >= '0' && s.charAt(j-1) <= '9'){
-												//Verifica se o o sina lque esta na frente do numero e + ou -
+												//Verifica se o o sinal que esta na frente do numero e + ou -
 												if(s.charAt(j-(contNum+1)) == '+'){
 															convert = Float.parseFloat(aux);
 															matrizAux[linha][coluna] = convert;
@@ -186,11 +186,11 @@ public class Simplex{
 				//Pesquisa a linha e coluna permissivel
 				for(int linha1 = 1; linha1 < Equacao.quantEquacoes+1; linha1++ ){								
 						if(matrizPrincipal[linha1][0] < 0){
-								MinLinha = linha1;
+								MinLinha = linha1;//linha permissivel
 								linha = true;
 									for(int coluna1 = 1; coluna1 < Equacao.quantTipoDesenho+1; coluna1++){
 										if(matrizPrincipal[linha1][coluna1] < 0){
-												MinColuna = coluna1;
+												MinColuna = coluna1;//coluna permissivel
 												coluna = true;	
 												coluna1 = Equacao.quantTipoDesenho+1;		
 											}	
@@ -223,7 +223,7 @@ public class Simplex{
 							posicaoQuociente = QQ;
 					}
 					else {
-						if(VetorQuociente[QQ] != Float.MIN_VALUE && MinQuociente >= VetorQuociente[QQ]){
+						if(VetorQuociente[QQ] != Float.MIN_VALUE && MinQuociente >= VetorQuociente[QQ]){//pega o menor quociente
 							MinQuociente = VetorQuociente[QQ];	
 							posicaoQuociente = QQ;
 						}								
@@ -508,7 +508,7 @@ public class Simplex{
 						vetorLinha[trocaLinha] = aux;
 			}	
 
-
+		//Troca as variaveis de acordo com a regiao permissivel
 		public static void PreencheVetorTrocaVariavel(){
 				vetorLinha = new String [Equacao.quantEquacoes+1];
 				vetorColuna = new String [Equacao.quantTipoDesenho+1];
