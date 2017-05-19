@@ -26,15 +26,15 @@ public class Equacao {
 			//System.out.println("Se deseja minimizar uma equacao digite 2.");
 
 			//MINorMAX = Integer.parseInt(leitor.readLine());
-			MINorMAX = 1;
+			MINorMAX = 1;//Variavel criada para verificar se a FO vai ser MIM ou MAX
 			//System.out.println("Quantas equacoes?");
 			//quantEquacoes = Integer.parseInt(leitor.readLine());
-			quantEquacoes = form.getQtdeDesenhos();
+			quantEquacoes = form.getQtdeDesenhos();//Pega a quantidade de restriçoes
 			
 			vetor = new String[(quantEquacoes + 1)];
 
 			//System.out.println("Quantos tipos de desenho?");
-			quantTipoDesenho = form.getQtdeDesenhos();
+			quantTipoDesenho = form.getQtdeDesenhos();//Pega a quatidades de desenhos 
 			/*
 			System.out.println("Escreva a equacao que sera minimizada ou maximizada:");
 			EquacaoMM = leitor.readLine();
@@ -43,6 +43,7 @@ public class Equacao {
 			*/
 			EquacaoMM = "";
 			int contX = 1;
+			//Faz a montagem da equacao objetiva
 			for(; contX<quantTipoDesenho; contX++) {//funcao objetiva
 				EquacaoMM += "1x" + contX + "+";
 			}
@@ -51,33 +52,34 @@ public class Equacao {
 			vetor[0] = EquacaoMM;
 			EquacaoMM = "";
 			//contX = 1;
+			//faz a montagem das equacoes das restricoes
 			while (cont <= quantEquacoes) {
 				//System.out.println("Digite as equacoes:");
 				//EquacaoMM = leitor.readLine();
 				//EquacaoMM = EquacaoMM.toLowerCase().trim();
 				//vetor[cont] = EquacaoMM;
 				//cont++;
+				
+				//monta as restricoes 
 				for(contX=1; contX<quantTipoDesenho; contX++) {
 					 EquacaoMM += form.getTempoPorDesIPorEtapaJ(contX, cont) + "x" + contX + "+";
-					 System.out.println("1 " + EquacaoMM);
+					 //System.out.println("1 " + EquacaoMM);
 				}
-				EquacaoMM += form.getTempoPorDesIPorEtapaJ(contX, cont) + "x" + quantTipoDesenho;
-				EquacaoMM += "<=" + form.getTempoPorEtapaX(cont);
-				System.out.println("2 " + EquacaoMM);
-				//
+				EquacaoMM += form.getTempoPorDesIPorEtapaJ(contX, cont) + "x" + quantTipoDesenho;//monta a equacao antes da igualdade
+				EquacaoMM += "<=" + form.getTempoPorEtapaX(cont);//junta a equacao ja criada com o sinal respectivo
+				//System.out.println("2 " + EquacaoMM);
 				vetor[cont] = EquacaoMM;
 				cont++;
 				EquacaoMM = "";
 			}
 			//MostrarVetor(vetor);
-
 			vetorEquacao = ClonarVetor(vetor);
 		} catch (Exception excecao) {
 			System.out.println("Excecao: ");
 			excecao.printStackTrace();
 		}
 	}
-
+	//Metodo criado para fazer a primeira manipulacao realizada na equacao antes de passar para o simplex
 	public static void TratarEquacoes() {
 		String MIN = " ";
 		String aux = " ";
@@ -102,7 +104,7 @@ public class Equacao {
 				MIN = "+".concat(MIN.substring(1, MIN.length()));
 			else if (MIN.charAt(0) == '+')
 				MIN = "-".concat(MIN.substring(1, MIN.length()));
-
+			//Transforma o resto dos sinais que estao presentes na equacao
 			for (int i = 1; i < MIN.length(); i++) {
 				if (MIN.charAt(i) == '-') {
 					MIN = MIN.substring(0, (i - 1)) + "+".concat(MIN.substring(i + 2, MIN.length()));
@@ -112,16 +114,16 @@ public class Equacao {
 				}
 			}
 		}
-
 		vetorEquacao[0] = MIN;
 
 		// Transformacao das equacoes para insercao da variavel livre
 		for (int i = 1; i < vetorEquacao.length; i++) {
 			MIN = vetorEquacao[i];
 			for (int j = 0; j < MIN.length(); j++) {
+				//Faz as modificacoes nas restricoes de acordo com o sinal da equacao
 				if (MIN.charAt(j) == '<') {
 					if (MIN.charAt(j + 1) == '=') {
-						NovoValor = InserirValorEquacaoA();
+						NovoValor = InserirValorEquacaoA();//insere as variaveis livres
 						aux1 = "+".concat(NovoValor);
 						aux2 = aux1.concat("=");
 						aux = MIN.substring(0, (j)).concat(aux2);
@@ -135,7 +137,7 @@ public class Equacao {
 					}
 				} else if (MIN.charAt(j) == '>') {
 					if (MIN.charAt(j + 1) == '=') {
-						NovoValor = InserirValorEquacaoB();
+						NovoValor = InserirValorEquacaoB();//Insere as variaveis livres
 						aux1 = "-".concat(NovoValor);
 						aux2 = aux1.concat("=");
 						aux = MIN.substring(0, (j)).concat(aux2);
@@ -153,6 +155,8 @@ public class Equacao {
 		}
 	}// fim TratarEquacoes
 
+	//Realiza todas as outras modificaçoes na equacao 
+	//EX: -b0 = +24-80x1-60xs2 e +b0 = -24 -(-80x1-60x2)
 	public static void ManipulacaoString() {
 		String MIN = "";
 		String aux = "";
@@ -162,27 +166,22 @@ public class Equacao {
 		for (int i = 1; i < vetorEquacao.length; i++) {
 			MIN = vetorEquacao[i];
 			for (int j = MIN.length() - 1; j > 0; j--) {
-				if (MIN.charAt(j) == 'a' || MIN.charAt(j) == 'b') {
-					if (MIN.charAt(j - 1) == '-') {
-						// +b=
-						aux = "+".concat(MIN.substring(j, j + 3));
+				if (MIN.charAt(j) == 'a' || MIN.charAt(j) == 'b') {//verifica se é maior >= ou menor <=
+					if (MIN.charAt(j - 1) == '-') {//verifica se qual e o sinal que esta antes da variavel livre inserida
+						aux = "+".concat(MIN.substring(j, j + 3));// +b=
 						if (MIN.charAt(j + 3) >= '0' && MIN.charAt(j + 3) <= '9') {
-							// -24
-							aux1 = "-".concat(MIN.substring(j + 3, MIN.length()));
+							aux1 = "-".concat(MIN.substring(j + 3, MIN.length()));// -24
 						} else {
 							System.out.println("Valor nao esperado!");
 						}
-						// +b=-24
-						aux = aux.concat(aux1);
-						if (MIN.charAt(0) >= '0' && MIN.charAt(0) <= '9')
-							aux1 = "+".concat(MIN.substring(0, j - 1));
-						if (MIN.charAt(0) >= 'a' && MIN.charAt(0) <= 'z')
-							aux1 = "+".concat(MIN.substring(0, j - 1));
-						// +b=-24+4x+6y
-						MIN = aux.concat(aux1);
+					
+						aux = aux.concat(aux1);// +b=-24
+						if (MIN.charAt(0) >= '0' && MIN.charAt(0) <= '9') aux1 = "+".concat(MIN.substring(0, j - 1));
+						if (MIN.charAt(0) >= 'a' && MIN.charAt(0) <= 'z') aux1 = "+".concat(MIN.substring(0, j - 1));						
+						MIN = aux.concat(aux1);// +b=-24+4x1+6x2
 						teste = false;
 
-					} else if (teste && MIN.charAt(j - 1) == '+') {
+					} else if (teste && MIN.charAt(j - 1) == '+') {//verifica se qual e o sinal que esta antes da variavel livre inserida
 						aux = MIN.substring(j - 1, j + 3);
 						aux1 = aux.concat("+");
 						aux = aux1.concat(MIN.substring(j + 3, MIN.length()));
@@ -212,7 +211,7 @@ public class Equacao {
 		// StringFinal(ManipularString);
 	}// fim ManipulacaoString
 
-	// Metodo criado para transformar a minha equacao
+	// Metodo criado para gerar a equacao final
 	public static void StringFinal() {
 		String MIN = "", aux = "", aux1 = "", ParteString = "";
 		boolean teste = true;
@@ -220,7 +219,7 @@ public class Equacao {
 
 		MIN = vetorEquacao[0];
 		// Tranformacao da esquacao maximizada e minimizada
-		aux = "+0-(";
+		aux = "+0-(";// insere na frente da funcao objetiva passada
 		for (int i = 0; i < MIN.length(); i++) {
 			if (MIN.charAt(i) == '+') {
 				aux1 = aux.concat("-");
@@ -244,17 +243,15 @@ public class Equacao {
 		aux = "";
 		aux1 = "";
 
-		// Transformacao das inequacoes para a forma a = +ou-num -(expressao)
+		// Transformacao das inequacoes para a forma a = +ou-(num -(expressao))
 		for (int i = 1; i < vetorEquacao.length; i++) {
 			MIN = vetorEquacao[i];
 			int cont = 0;
 
 			// Percorre a minha string contando o tamanho do numero
 			for (int j = 5; j < MIN.length(); j++) {
-				if (MIN.charAt(j) >= '0' && MIN.charAt(j) <= '9')
-					cont++;
-				else
-					j = MIN.length();
+				if (MIN.charAt(j) >= '0' && MIN.charAt(j) <= '9')cont++;
+				else j = MIN.length();
 			}
 			aux = MIN.substring(0, (5 + cont));
 			// System.out.println("auz4: " +aux1);
@@ -281,17 +278,17 @@ public class Equacao {
 			aux = "";
 			aux1 = "";
 		} // fim for
-
 		MostrarVetor(vetorEquacao);
 	}// fim StringFinal
 
+	//Metodo criado para inserir variavel livre quando a equacao tiver <=
 	public static String InserirValorEquacaoA() {
 		String NovoValor = " ";
 		NovoValor = "a".concat("" + contA);
 		contA++;
 		return NovoValor;
 	}
-
+	//Metodo criado para inserir variavel livre quando a equacao tiver >=
 	public static String InserirValorEquacaoB() {
 		String NovoValor = " ";
 		NovoValor = "b".concat("" + contB);
